@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:form_field_validator/form_field_validator.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:mobile_app_test/core/widgets/containers/login_container.dart';
+import 'package:mobile_app_test/features/auth/presentation/screens/login_screen/login_bloc.dart';
+import 'package:mobile_app_test/features/auth/presentation/screens/login_screen/login_state.dart';
 import 'package:mobile_app_test/features/navigation/presentation/screens/navigation_screen/navigation_screen.dart';
 
-import '../../../../../core/constant/app_colors.dart';
-import '../../../../../core/widgets/buttons/app_text_button.dart';
-import '../../../../../core/widgets/buttons/bordered_button.dart';
-import '../../../../../core/widgets/input_fields/app_input_field.dart';
+import '../../../../../core/toast/toast_message.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,140 +16,33 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController userNameController = TextEditingController();
-
-  final TextEditingController passwordController = TextEditingController();
-
-  final GlobalKey<FormState> passwordKey = GlobalKey<FormState>();
-
-  final GlobalKey<FormState> userNameKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            flex: 7,
-            child: SizedBox(
-              child: Center(
-                  child: Image.asset(
-                'assets/launch_img.png',
-                fit: BoxFit.fill,
-              )),
-            ),
-          ),
-          Expanded(
-              flex: 6,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: AppInputField(
-                        inputType: TextInputType.name,
-                        formKey: userNameKey,
-                        validator: MultiValidator([
-                          RequiredValidator(errorText: 'Email is required')
-                        ]),
-                        controller: userNameController,
-                        hintText: 'Email',
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: AppInputField(
-                        inputType: TextInputType.name,
-                        formKey: passwordKey,
-                        validator: MultiValidator([
-                          RequiredValidator(errorText: 'Password is required')
-                        ]),
-                        controller: userNameController,
-                        hintText: 'Password',
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: AppTextButton(
-                          textColor: AppColors.appColorBlack,
-                          event: () {},
-                          textSpan: const TextSpan(children: [
-                            TextSpan(
-                                text: "Forgot password? ",
-                                style: TextStyle(
-                                    color: AppColors.appColorPurple,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    fontFamily: 'Poppins'))
-                          ]),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: AppTextButton(
-                          textColor: AppColors.appColorBlack,
-                          event: () {},
-                          textSpan: const TextSpan(children: [
-                            TextSpan(
-                                text: "By continuing, you agree to our  ",
-                                style: TextStyle(
-                                    color: AppColors.appColorBlack,
-                                    fontFamily: 'Poppins')),
-                            TextSpan(
-                                text: "Terms of Service",
-                                style: TextStyle(
-                                    color: AppColors.appColorPurple,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Poppins')),
-                            TextSpan(
-                                text: " and ",
-                                style: TextStyle(
-                                    color: AppColors.appColorBlack,
-                                    fontFamily: 'Poppins')),
-                            TextSpan(
-                                text: " Privacy Policy.",
-                                style: TextStyle(
-                                    color: AppColors.appColorPurple,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Poppins'))
-                          ]),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: BorderedButton(
-                            clickEvent: () {
-                              Get.to(NavigationScreen());
-                              //if (isValidate()) {}
-                            },
-                            text: "Login",
-                            radius: 20,
-                            textColor: AppColors.appColorWhite,
-                            backgroundColor: AppColors.appColorPurple),
-                      ),
-                    ),
-                  ],
-                ),
-              ))
-        ],
+      body: BlocConsumer<LoginBloc, LoginState>(
+        listener: (context, state) {
+          if (state is LoginError) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(toastMessage(message: state.message));
+          }
+          if (state is LoginLoaded) {
+            Get.to(const NavigationScreen());
+          }
+        },
+        builder: (context, state) {
+          if (state is LoginInitial) {
+            return LoginContainer();
+          } else if (state is LoginLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is LoginLoaded) {
+            return LoginContainer();
+          } else if (state is LoginError) {
+            return LoginContainer();
+          } else {
+            return Container();
+          }
+        },
       ),
     );
-  }
-
-  bool isValidate() {
-    if (userNameKey.currentState!.validate() &&
-        passwordKey.currentState!.validate()) {
-      return true;
-    } else {
-      return false;
-    }
   }
 }

@@ -1,15 +1,18 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:mobile_app_test/features/lesson/presentation/screens/single_lesson_view_screen/single_lesson_view_screen.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../../../../core/constant/app_colors.dart';
 import '../../../../../core/widgets/atoms/app_label.dart';
+import '../../../domain/entity/session_entity.dart';
+import '../lesson_video_view_screen/lesson_video_view_screen.dart';
 
 class LessonViewScreen extends StatelessWidget {
-  const LessonViewScreen({super.key, required this.index});
-  final int index;
+  const LessonViewScreen({super.key, required this.sessionsEntity});
+
+  final SessionsEntity sessionsEntity;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,18 +43,18 @@ class LessonViewScreen extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
-                  const Expanded(
+                  Expanded(
                       flex: 1,
                       child: Center(
                         child: Padding(
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: [
                               Expanded(
                                   flex: 3,
                                   child: Center(
                                     child: AppLabel(
-                                      text: "Yoga Pilates Full Body",
+                                      text: sessionsEntity.category ?? "",
                                       fontSize: 24,
                                     ),
                                   )),
@@ -59,7 +62,8 @@ class LessonViewScreen extends StatelessWidget {
                                   flex: 1,
                                   child: Center(
                                     child: AppLabel(
-                                      text: "5 Lessons",
+                                      text:
+                                          "${sessionsEntity.lesson.length} Lessons",
                                       textColor: AppColors.appColorPurple,
                                       fontSize: 12,
                                     ),
@@ -70,18 +74,18 @@ class LessonViewScreen extends StatelessWidget {
                       )),
                   Expanded(
                     flex: 6,
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.to(SingleLessonViewScreen(
-                          index: index,
-                        ));
-                      },
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: 5,
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (context, index) {
-                          return Card(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: sessionsEntity.lesson.length,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Get.to(LessonVideoViewScreen(
+                                url: sessionsEntity.lesson[index].videoUrl ??
+                                    ''));
+                          },
+                          child: Card(
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               child: Row(
@@ -108,11 +112,20 @@ class LessonViewScreen extends StatelessWidget {
                                             text: 'Lesson ${index + 1}',
                                             fontSize: 14,
                                           ),
-                                          const AppLabel(
-                                            text:
-                                                'Lorem Ipsum is simply dummy text of ',
-                                            fontSize: 12,
-                                            textColor: AppColors.appColorGray,
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.5,
+                                            child: AppLabel(
+                                              text: sessionsEntity.lesson[index]
+                                                      .description ??
+                                                  '',
+                                              fontSize: 12,
+                                              textOverflow:
+                                                  TextOverflow.ellipsis,
+                                              textColor: AppColors.appColorGray,
+                                            ),
                                           ),
                                         ]),
                                     Container(
@@ -130,11 +143,11 @@ class LessonViewScreen extends StatelessWidget {
                                     )
                                   ]),
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -143,9 +156,14 @@ class LessonViewScreen extends StatelessWidget {
         body: Stack(
           fit: StackFit.expand,
           children: [
-            Image.asset(
-              "assets/lessons/${index + 1}.png",
+            CachedNetworkImage(
               fit: BoxFit.cover,
+              imageUrl: sessionsEntity.imageUrl ?? '',
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  Center(
+                      child: CircularProgressIndicator(
+                          value: downloadProgress.progress)),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
             Positioned(
               right: 30,
@@ -168,7 +186,7 @@ class LessonViewScreen extends StatelessWidget {
               left: 30,
               top: 50,
               child: BackButton(
-                color: AppColors.appColorWhite,
+                color: AppColors.appColorBlack,
               ),
             )
           ],

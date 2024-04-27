@@ -53,7 +53,7 @@ class LaunchScreen extends StatelessWidget {
                       BorderedButton(
                         backgroundColor: Colors.white,
                         clickEvent: () {
-                          Get.to(RegistrationScreen());
+                          Get.to(const RegistrationScreen());
                         },
                         radius: 20,
                         text: 'Get Started',
@@ -68,7 +68,7 @@ class LaunchScreen extends StatelessWidget {
                         radius: 20,
                         textColor: Colors.white,
                         clickEvent: () {
-                          Get.to(LoginScreen());
+                          Get.to(const LoginScreen());
                         },
                       )
                     ],

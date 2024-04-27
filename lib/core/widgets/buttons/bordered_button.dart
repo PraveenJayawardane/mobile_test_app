@@ -13,7 +13,7 @@ class BorderedButton extends StatelessWidget {
   final double? fontSize;
   Color? backgroundColor;
   BorderedButton(
-      {Key? key,
+      {super.key,
       required this.text,
       required this.clickEvent,
       this.borderColor = AppColors.appColorBlack,
@@ -22,8 +22,7 @@ class BorderedButton extends StatelessWidget {
       this.backgroundColor,
       this.width,
       this.radius = 6.0,
-      this.fontSize = 14.0})
-      : super(key: key);
+      this.fontSize = 14.0});
 
   @override
   Widget build(BuildContext context) {

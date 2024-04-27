@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'package:mobile_app_test/core/constant/app_colors.dart';
 import 'package:mobile_app_test/core/constant/app_const_string.dart';
 import 'package:mobile_app_test/core/widgets/atoms/app_heading.dart';
 import 'package:mobile_app_test/core/widgets/atoms/app_label.dart';
-import 'package:mobile_app_test/features/auth/presentation/screens/login_screen/login_screen.dart';
+import 'package:mobile_app_test/core/widgets/containers/session_container.dart';
+import 'package:mobile_app_test/features/home/presentation/screens/session_block/session_bloc.dart';
+import 'package:mobile_app_test/features/home/presentation/screens/session_block/session_event.dart';
+import 'package:mobile_app_test/features/home/presentation/screens/session_block/session_state.dart';
 
-import '../../../../lesson/presentation/screens/lesson_view_screen/lesson_view_screen.dart';
+import '../../../../../core/widgets/bottom_sheets/app_bottom_sheets.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    context.read<SessionBloc>().add(SessionEvent());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +40,7 @@ class HomeScreen extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Get.to(const LoginScreen());
+              userLogOutBottomSheet(context: context);
             },
             child: const Icon(
               FontAwesomeIcons.powerOff,
@@ -143,120 +157,31 @@ class HomeScreen extends StatelessWidget {
                         text: "Top Sessions",
                         fontSize: 24,
                       )),
-                  Expanded(
-                    flex: 8,
-                    child: GestureDetector(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: 4,
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Get.to(LessonViewScreen(
-                                index: index,
-                              ));
-                            },
-                            child: Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(children: [
-                                  Column(children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              image: AssetImage(
-                                                  "assets/category/${index + 1}.png")),
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      height: 100,
-                                      width: 100,
-                                    ),
-                                  ]),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const AppLabel(
-                                          text: 'Yoga Pilates',
-                                          fontSize: 14,
-                                        ),
-                                        const AppLabel(
-                                          text: '5 lessons',
-                                          fontSize: 12,
-                                        ),
-                                        Row(
-                                          children: [
-                                            const AppLabel(
-                                              text: "By Sarah William",
-                                              fontSize: 10,
-                                              textColor:
-                                                  AppColors.appColorLightGray,
-                                            ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            Container(
-                                              height: 5,
-                                              width: 5,
-                                              decoration: BoxDecoration(
-                                                  color: AppColors
-                                                      .appColorLightGray,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                            ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            const AppLabel(
-                                              text: "All Level",
-                                              fontSize: 10,
-                                              textColor:
-                                                  AppColors.appColorLightGray,
-                                            ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            Container(
-                                              height: 5,
-                                              width: 5,
-                                              decoration: BoxDecoration(
-                                                  color: AppColors
-                                                      .appColorLightGray,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                            ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            const Icon(
-                                              FontAwesomeIcons.solidStar,
-                                              color: AppColors.appColorOrange,
-                                              size: 10,
-                                            ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            const AppLabel(
-                                              text: "4.5",
-                                              fontSize: 10,
-                                              textColor: AppColors.appColorGray,
-                                            ),
-                                          ],
-                                        )
-                                      ]),
-                                ]),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                  BlocBuilder<SessionBloc, SessionState>(
+                    builder: (context, state) {
+                      if (state is SessionInitial) {
+                        return const Center(
+                            child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: CircularProgressIndicator(),
+                        ));
+                      } else if (state is SessionLoading) {
+                        return const Center(
+                            child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 100, horizontal: 100),
+                          child: CircularProgressIndicator(),
+                        ));
+                      } else if (state is SessionLoaded) {
+                        return SessionContainer(
+                          sessionEntityList: state.sessionEntity,
+                        );
+                      } else if (state is SessionError) {
+                        return Text(state.message);
+                      } else {
+                        return Container();
+                      }
+                    },
                   )
                 ],
               ),

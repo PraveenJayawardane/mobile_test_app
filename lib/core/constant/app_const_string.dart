@@ -5,3 +5,4 @@ const List<String> menuCategory = [
   "Hip"
 ];
 const checkInternet = 'Check your internet connection';
+const baseUrl = 'http://84.46.249.96:5000/api';

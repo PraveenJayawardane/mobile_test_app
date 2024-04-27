@@ -51,13 +51,13 @@ class NavigationScreen extends StatelessWidget {
       body: BlocBuilder<NavigationBlock, NavigationState>(
           builder: (context, state) {
         if (state.navbarItem == NavbarItem.home) {
-          return HomeScreen();
+          return const HomeScreen();
         } else if (state.navbarItem == NavbarItem.heart) {
-          return LoginScreen();
+          return const LoginScreen();
         } else if (state.navbarItem == NavbarItem.profile) {
-          return LoginScreen();
+          return const LoginScreen();
         } else {
-          return LoginScreen();
+          return const LoginScreen();
         }
       }),
     );

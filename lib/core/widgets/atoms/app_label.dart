@@ -12,15 +12,14 @@ class AppLabel extends StatelessWidget {
   final TextAlign? textAlign;
 
   const AppLabel(
-      {Key? key,
+      {super.key,
       required this.text,
       this.textColor = AppColors.appColorBlack,
       this.fontSize = 16.0,
       this.fontStyle,
       this.textAlign,
       this.textOverflow,
-      this.fontWeight = FontWeight.w500})
-      : super(key: key);
+      this.fontWeight = FontWeight.w500});
 
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import '../../constant/app_colors.dart';
+
 bool isUserName(String input) =>
-    RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]")
-        .hasMatch(input);
+    RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]").hasMatch(input);
 
 class AppEmailPasswordField extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -16,7 +17,7 @@ class AppEmailPasswordField extends StatelessWidget {
   final int? maxLine;
 
   const AppEmailPasswordField(
-      {Key? key,
+      {super.key,
       required this.formKey,
       required this.controller,
       required this.inputType,
@@ -25,8 +26,7 @@ class AppEmailPasswordField extends StatelessWidget {
       this.isObscure = false,
       this.isEnable = true,
       this.minLine,
-      this.maxLine = 1})
-      : super(key: key);
+      this.maxLine = 1});
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +42,18 @@ class AppEmailPasswordField extends StatelessWidget {
         enabled: isEnable,
         minLines: minLine,
         maxLines: maxLine,
-        decoration: InputDecoration(fillColor: AppColors.appColorGray03.withOpacity(0.1),filled: true,
-          focusColor: AppColors.appColorWhiteGray,border: const OutlineInputBorder(borderSide: BorderSide(color: AppColors.appColorWhite)),
-          disabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: AppColors.appColorWhite)),
-          enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: AppColors.appColorWhite)),
-          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: AppColors.appColorWhite)),
-
+        decoration: InputDecoration(
+          fillColor: AppColors.appColorGray03.withOpacity(0.1),
+          filled: true,
+          focusColor: AppColors.appColorWhiteGray,
+          border: const OutlineInputBorder(
+              borderSide: BorderSide(color: AppColors.appColorWhite)),
+          disabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: AppColors.appColorWhite)),
+          enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: AppColors.appColorWhite)),
+          focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: AppColors.appColorWhite)),
           hintStyle: TextStyle(color: hintColor, fontSize: 14),
           hintText: hintText,
         ),

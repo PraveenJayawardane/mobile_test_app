@@ -26,3 +26,17 @@ class LoginFailure extends Failure {
   @override
   List<Object?> get props => [message];
 }
+
+class RegisterFailure extends Failure {
+  const RegisterFailure({required super.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class SessionFailure extends Failure {
+  const SessionFailure({required super.message});
+
+  @override
+  List<Object?> get props => [message];
+}

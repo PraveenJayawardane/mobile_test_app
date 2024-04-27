@@ -15,7 +15,7 @@ class BorderedIconButton extends StatelessWidget {
   final FaIcon faIcon;
 
   const BorderedIconButton(
-      {Key? key,
+      {super.key,
       required this.text,
       required this.clickEvent,
       this.borderColor = AppColors.appColorBlack,
@@ -24,8 +24,7 @@ class BorderedIconButton extends StatelessWidget {
       this.width,
       this.radius = 6.0,
       required this.faIcon,
-      this.fontSize = 14.0})
-      : super(key: key);
+      this.fontSize = 14.0});
 
   @override
   Widget build(BuildContext context) {

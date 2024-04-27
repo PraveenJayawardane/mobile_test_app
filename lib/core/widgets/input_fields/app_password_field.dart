@@ -16,7 +16,7 @@ class AppPasswordField extends StatefulWidget {
   final int? maxLine;
 
   AppPasswordField(
-      {Key? key,
+      {super.key,
       required this.formKey,
       required this.controller,
       required this.inputType,
@@ -26,8 +26,7 @@ class AppPasswordField extends StatefulWidget {
       this.isObscure = false,
       this.isEnable = true,
       this.minLine,
-      this.maxLine = 1})
-      : super(key: key);
+      this.maxLine = 1});
 
   @override
   State<AppPasswordField> createState() => _AppPasswordFieldState();
@@ -71,7 +70,7 @@ class _AppPasswordFieldState extends State<AppPasswordField> {
                   });
                 },
               )),
-          validator: widget.validator),
+          validator: widget.validator.call),
     );
   }
 }

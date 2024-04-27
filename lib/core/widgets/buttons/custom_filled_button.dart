@@ -6,7 +6,7 @@ class CustomFilledButton extends StatelessWidget {
   final String text;
   final Function clickEvent;
   final Color bgColor;
-  final  Color textColor;
+  final Color textColor;
   final double height;
   final double? width;
   final double radius;
@@ -15,7 +15,7 @@ class CustomFilledButton extends StatelessWidget {
   final Color? disableColor;
 
   const CustomFilledButton(
-      {Key? key,
+      {super.key,
       required this.text,
       required this.clickEvent,
       this.bgColor = AppColors.appColorLightBlue,
@@ -25,8 +25,7 @@ class CustomFilledButton extends StatelessWidget {
       this.btnController,
       this.disableColor = AppColors.appColorBlack,
       this.radius = 6.0,
-      this.fontSize = 14.0})
-      : super(key: key);
+      this.fontSize = 14.0});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class CustomFilledButton extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: SizedBox(
           height: height,
-          width:  MediaQuery.of(context).size.width,
+          width: MediaQuery.of(context).size.width,
           child: ElevatedButton(
               style: ButtonStyle(
                   foregroundColor: MaterialStateProperty.all<Color>(textColor),
